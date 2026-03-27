@@ -34,6 +34,30 @@ def load_data(file_path: str) -> pd.DataFrame:
     return standardize_columns(raw_df)
 
 
+def inject_ui_overrides() -> None:
+    """Hide Streamlit header action buttons (Deploy / Share / Edit)."""
+    st.markdown(
+        """
+        <style>
+        /* Header action area */
+        [data-testid="stHeaderActionElements"],
+        [data-testid="stAppDeployButton"],
+        .stAppDeployButton,
+        button[title="Deploy this app"],
+        button[title="Share this app"],
+        button[title="Edit"],
+        button[aria-label*="Deploy"],
+        button[aria-label*="Share"],
+        button[aria-label*="Edit"] {
+            display: none !important;
+            visibility: hidden !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
 def _plot_win_rate_bar(df: pd.DataFrame, dimension: str, title: str):
     if df.empty:
         st.info("No closed deals for this selection.")
@@ -102,6 +126,7 @@ def _plot_win_rate_vs_ppc(df: pd.DataFrame):
 
 
 def main():
+    inject_ui_overrides()
     st.title("RevOps Deals Dashboard")
     st.caption("Interactive performance dashboard with quality checks and auto-generated insights.")
 
